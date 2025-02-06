@@ -1,16 +1,15 @@
-'use client'
-import Link from "next/link"
-import { useState } from "react"
-import MobileMenu from "./MobileMenu"
-// import MobileMenu
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import MobileMenu from "./MobileMenu";
 
-function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div>
-      <>
+    <>
       <nav className="fixed top-0 left-0 w-full border-b border-white/5 bg-black/60 backdrop-blur-xl z-50">
-        <div className="mx-auto max-w-7xl px-6 pt-1">
+        <div className="mx-auto max-w-7xl px-6">
           <div className="flex h-16 items-center justify-between">
             {/* Logo and Brand */}
             <div className="flex items-center space-x-3">
@@ -35,7 +34,8 @@ function Navbar() {
                 </span>
               </Link>
             </div>
-            {/* items */}
+
+            {/* Main Navigation */}
             <div className="hidden md:flex items-center space-x-6">
               <Link
                 href="/submit-report"
@@ -55,13 +55,9 @@ function Navbar() {
               >
                 How It Works
               </Link>
-              <Link
-                href="/resources"
-                className="text-sm text-zinc-400 hover:text-white transition-colors"
-              >
-                Resources
-              </Link>
+            
             </div>
+
             {/* Emergency Button */}
             <div className="flex items-center space-x-4">
               <Link
@@ -70,17 +66,17 @@ function Navbar() {
               >
                 Contact
               </Link>
-              <button className="group flex h-9 items-center md:gap-2 gap-1 rounded-full bg-red-500/10 px-1 md:pl-4 md:pr-5 md:px-0 text-[0.66rem] md:text-sm font-medium text-red-500 ring-1 ring-inset ring-red-500/20 transition-all hover:bg-red-500/20">
-                <span className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-red-500 animate-pulse" />
+              <button className="group flex h-9 items-center gap-2 rounded-full bg-red-500/10 px-1 sm:pl-4 sm:pr-5 text-[0.62rem] sm:text-sm font-medium text-red-500 ring-1 ring-inset ring-red-500/20 transition-all hover:bg-red-500/20">
+                <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-red-500 animate-pulse" />
                 Emergency: 911
               </button>
-              {/* mobile menu button */}
-              <button className="md:hidden p-2 text-zinc-400 hover:text-white"
-              onClick={() => {
-                setIsMenuOpen(true);
-              }}
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden p-2 text-zinc-400 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(true)}
               >
-              <svg
+                <svg
                   className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -98,13 +94,11 @@ function Navbar() {
           </div>
         </div>
       </nav>
-      <MobileMenu
-      isOpen={isMenuOpen}
-      onClose={()=> setIsMenuOpen(false)}
-      />
-      </>
-    </div>
-  )
-}
 
-export default Navbar
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
+    </>
+  );
+}

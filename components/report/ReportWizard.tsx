@@ -1,25 +1,29 @@
-'use client'
-import { useState} from 'react'
-import ReportForm from "./ReportForm";
+"use client";
 
-function ReportWizard() {
-    const [currentState, setCurrentState] = useState(1);
-    const [reportData , setReportData] = useState<any>(null);
+import { useState } from "react";
+import { ReportForm } from "./ReportForm";
+import { ReportSubmitted } from "./ReportFormCompleted";
 
-    const handleStepComplete = async(data:any) => {
-      setReportData({...reportData , ...data});
-      if (currentState === 2){
-        return;
-      }
-      setCurrentState((prev) => prev +1);
+export function ReportWizard() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [reportData, setReportData] = useState<any>(null);
+
+  const handleStepComplete = async (data: any) => {
+    setReportData({ ...reportData, ...data });
+
+    if (currentStep === 4) {
+      return;
     }
 
-  return (
-    <div className='rounded-2xl bg-zinc-900 p-8'>
-      {currentState === 1 && <ReportForm/>}
-      
-    </div>
-  )
-}
+    setCurrentStep((prev) => prev + 1);
+  };
 
-export default ReportWizard;
+  return (
+    <div className="rounded-2xl bg-zinc-900 p-8">
+      {currentStep === 1 && <ReportForm onComplete={handleStepComplete} />}
+      {currentStep === 2 && (
+        <ReportSubmitted data={reportData} onComplete={handleStepComplete} />
+      )}
+    </div>
+  );
+}

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { LocationInput } from "./LocationInput";
-// import crypto from "crypto";
+import crypto from "crypto";
 
 const REPORT_TYPES = [
   "Theft",
@@ -19,7 +19,7 @@ interface ReportFormProps {
   onComplete: (data: any) => void;
 }
 
-export default function ReportForm({ onComplete }: ReportFormProps) {
+export function ReportForm({ onComplete }: ReportFormProps) {
   const [formData, setFormData] = useState({
     incidentType: "" as ReportType,
     specificType: "",
@@ -38,96 +38,96 @@ export default function ReportForm({ onComplete }: ReportFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  //   setIsAnalyzing(true);
+    setIsAnalyzing(true);
 
-  //   try {
-  //     const base64 = await new Promise((resolve) => {
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => resolve(reader.result);
-  //       reader.readAsDataURL(file);
-  //     });
+    try {
+      const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
 
-  //     const response = await fetch("/api/analyze-image", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ image: base64 }),
-  //     });
+      const response = await fetch("/api/analyze-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
 
-  //     const data = await response.json();
+      const data = await response.json();
 
-  //     if (data.title && data.description && data.reportType) {
-  //       setFormData((prev) => ({
-  //         ...prev,
-  //         title: data.title,
-  //         description: data.description,
-  //         specificType: data.reportType,
-  //       }));
-  //       setImage(base64 as string);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error analyzing image:", error);
-  //   } finally {
-  //     setIsAnalyzing(false);
-  //   }
-  // };
+      if (data.title && data.description && data.reportType) {
+        setFormData((prev) => ({
+          ...prev,
+          title: data.title,
+          description: data.description,
+          specificType: data.reportType,
+        }));
+        setImage(base64 as string);
+      }
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
-  // const generateReportId = useCallback(() => {
-  //   const timestamp = Date.now().toString();
-  //   const randomBytes = crypto.randomBytes(16).toString("hex");
-  //   const combinedString = `${timestamp}-${randomBytes}`;
-  //   return crypto
-  //     .createHash("sha256")
-  //     .update(combinedString)
-  //     .digest("hex")
-  //     .slice(0, 16);
-  // }, []);
+  const generateReportId = useCallback(() => {
+    const timestamp = Date.now().toString();
+    const randomBytes = crypto.randomBytes(16).toString("hex");
+    const combinedString = `${timestamp}-${randomBytes}`;
+    return crypto
+      .createHash("sha256")
+      .update(combinedString)
+      .digest("hex")
+      .slice(0, 16);
+  }, []);
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  //   try {
-  //     const reportData = {
-  //       reportId: generateReportId(),
-  //       type: formData.incidentType,
-  //       specificType: formData.specificType,
-  //       title: formData.title,
-  //       description: formData.description,
-  //       location: formData.location,
-  //       latitude: coordinates.latitude,
-  //       longitude: coordinates.longitude,
-  //       image: image,
-  //       status: "PENDING",
-  //     };
+    try {
+      const reportData = {
+        reportId: generateReportId(),
+        type: formData.incidentType,
+        specificType: formData.specificType,
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+        image: image,
+        status: "PENDING",
+      };
 
-  //     const response = await fetch("/api/reports/create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(reportData),
-  //     });
+      const response = await fetch("/api/reports/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reportData),
+      });
 
-  //     const result = await response.json();
+      const result = await response.json();
 
-  //     if (!response.ok) {
-  //       throw new Error(result.error || "Failed to submit report");
-  //     }
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to submit report");
+      }
 
-  //     onComplete(result);
-  //   } catch (error) {
-  //     console.error("Error submitting report:", error);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+      onComplete(result);
+    } catch (error) {
+      console.error("Error submitting report:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <form  className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8">
       {/* Emergency Type Selection */}
       <div className="grid grid-cols-2 gap-4">
         <button
@@ -198,7 +198,7 @@ export default function ReportForm({ onComplete }: ReportFormProps) {
         <input
           type="file"
           accept="image/*"
-          // onChange={handleImageUpload}
+          onChange={handleImageUpload}
           className="hidden"
           id="image-upload"
         />
@@ -272,28 +272,36 @@ export default function ReportForm({ onComplete }: ReportFormProps) {
       </div>
 
       {/* Specific Report Type */}
-      <div>
+        <div>
         <label className="block text-sm font-medium text-zinc-400 mb-2">
           Incident Type
         </label>
-        <select
-          value={formData.specificType}
-          onChange={(e) =>
-            setFormData((prev) => ({ ...prev, specificType: e.target.value }))
-          }
-          className="w-full rounded-xl bg-zinc-900/50 border border-zinc-800 px-4 py-3.5
-                   text-white transition-colors duration-200
-                   focus:outline-none focus:ring-2 focus:ring-sky-500/40"
-          required
-        >
+        <div className="relative">
+          <select
+            value={formData.specificType}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, specificType: e.target.value }))
+            }
+            className="w-full rounded-xl bg-zinc-900/60 border border-zinc-800 px-4 py-3.5 text-white transition-all
+                      focus:outline-none focus:ring-2 focus:ring-sky-500/50 hover:border-sky-500
+                      appearance-none shadow-lg backdrop-blur-md"
+            required
+          >
           <option value="">Select type</option>
-          {REPORT_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-      </div>
+            {REPORT_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+
+          {/* Downward Chevron Icon */}
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+            ▼
+          </span>
+        </div>
+    </div>
+
 
       {/* Location */}
       <LocationInput

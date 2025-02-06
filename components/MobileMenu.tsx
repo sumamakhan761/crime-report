@@ -5,7 +5,7 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
-function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
@@ -63,13 +63,6 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               How It Works
             </Link>
             <Link
-              href="/resources"
-              className="text-sm text-zinc-400 hover:text-white transition-colors"
-              onClick={onClose}
-            >
-              Resources
-            </Link>
-            <Link
               href="/contact"
               className="text-sm text-zinc-400 hover:text-white transition-colors"
               onClick={onClose}
@@ -82,5 +75,3 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     </div>
   );
 }
-
-export default MobileMenu

@@ -148,30 +148,37 @@ export default function Home() {
         </div>
 
         {/* Stats Section */}
-        <div className="mt-40 rounded-2xl bg-zinc-900 p-8">
-          <div className="grid gap-y-8 sm:grid-cols-3">
+        <div className="mt-40 rounded-2xl bg-zinc-900/80 p-10 backdrop-blur-md shadow-lg border border-zinc-800">
+          <div className="grid gap-y-8 sm:grid-cols-3 text-center">
             {[
-              { value: "100K+", label: "Reports Filed" },
-              { value: "100%", label: "Anonymity Rate" },
-              { value: "24/7", label: "Support Available" },
+              { value: "50+", label: "Reports Filed", color: "text-blue-400" },
+              { value: "100%", label: "Anonymity Rate", color: "text-green-400" },
+              { value: "24/7", label: "Support Available", color: "text-purple-400" },
             ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="text-3xl font-bold text-white">
+              <div key={i} className="flex flex-col items-center">
+                <div className={`text-4xl font-extrabold ${stat.color} drop-shadow-lg`}>
                   {stat.value}
                 </div>
-                <div className="mt-1 text-sm text-zinc-400">{stat.label}</div>
+                <div className="mt-2 text-sm text-zinc-400 tracking-wide">
+                  {stat.label}
+                </div>
+                <div className="mt-3 h-1 w-12 bg-gradient-to-r from-transparent via-zinc-600 to-transparent rounded-full"></div>
               </div>
             ))}
           </div>
-        </div>
+       </div>
+
 
         {/* Trust Badge */}
-        <div className="mt-40 mb-20 flex justify-center">
-          <div className="inline-flex items-center gap-3 rounded-full bg-zinc-900 px-5 py-2 text-sm text-zinc-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Trusted by Law Enforcement Nationwide
-          </div>
-        </div>
+      <div className="mt-40 mb-20 flex justify-center">
+      <div className="inline-flex items-center gap-3 rounded-full bg-zinc-900/80 px-6 py-3 text-sm text-zinc-300 shadow-md backdrop-blur-lg border border-zinc-800 transition-all hover:bg-zinc-900/90 hover:scale-105">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+        <span className="font-medium tracking-wide bg-gradient-to-r from-emerald-300 to-green-400 bg-clip-text text-transparent">
+          Trusted by Law Enforcement Nationwide
+        </span>
+      </div>
+    </div>
+
       </div>
     </main>
     </div>
