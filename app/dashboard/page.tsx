@@ -12,7 +12,8 @@ export default function Dashboard() {
   const [filter, setFilter] = useState<ReportStatus | "ALL">("ALL");
   const [typeFilter, setTypeFilter] = useState<ReportType | "ALL">("ALL");
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
+
+    useEffect(() => {
     // Redirect to home if user is not authorized
     if (status === "authenticated" && session?.user?.email !== "sumamakhan800@gmail.com") {
       router.push("/");

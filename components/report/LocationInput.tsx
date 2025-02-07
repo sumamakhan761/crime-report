@@ -1,6 +1,16 @@
-// @ts-nocheck
 import { useState } from "react";
 import { AddressAutofill } from "@mapbox/search-js-react";
+import React from "react";
+
+
+// Fix TypeScript issue by explicitly defining AddressAutofill props
+interface AddressAutofillFixedProps {
+  accessToken: string;
+  children?: React.ReactNode;
+}
+
+// Type cast AddressAutofill to include children
+const TypedAddressAutofill = AddressAutofill as unknown as React.FC<AddressAutofillFixedProps>;
 
 interface LocationInputProps {
   value: string;
@@ -15,6 +25,7 @@ export function LocationInput({
 }: LocationInputProps) {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
+
 
   const getLocation = async () => {
     setIsGettingLocation(true);
@@ -76,9 +87,7 @@ export function LocationInput({
         Location
       </label>
       <div className="relative">
-        <AddressAutofill
-          accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""}
-        >
+        <TypedAddressAutofill accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ""}>
           <input
             type="text"
             autoComplete="street-address"
@@ -86,10 +95,12 @@ export function LocationInput({
             onChange={(e) => onChange(e.target.value)}
             placeholder="Enter location or use pin"
             className="w-full rounded-xl bg-zinc-900/50 border border-zinc-800 pl-4 pr-12 py-3.5
-                     text-white transition-colors duration-200
-                     focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                      text-white transition-colors duration-200
+                      focus:outline-none focus:ring-2 focus:ring-sky-500/40"
           />
-        </AddressAutofill>
+       </TypedAddressAutofill>
+
+
         <button
           type="button"
           onClick={getLocation}
