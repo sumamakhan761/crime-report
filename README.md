@@ -14,6 +14,14 @@ SafeReport is a **secure web application** that allows users to **anonymously re
 - **📞 Direct Emergency Contact:** Users can contact emergency services directly from the application.  
 - **🖥️ Modern & Responsive UI:** Designed with **Shard CN and Tailwind CSS** for a seamless and accessible user experience.  
 
+## Demo
+
+
+https://github.com/user-attachments/assets/4398e8b7-86d3-494c-becc-5ee0405ff0bb
+
+
+
+
 ## 📌 Installation & Setup
 
 1. **Clone the repository:**
