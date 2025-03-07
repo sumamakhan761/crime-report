@@ -76,11 +76,11 @@ https://github.com/user-attachments/assets/4398e8b7-86d3-494c-becc-5ee0405ff0bb
 | **Gemini** | <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_advanced_1743d7b7a7bc01f38e6f4.svg" width="75" height="75"> |
 | **Mapbox** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Mapbox_logo_2019.svg/640px-Mapbox_logo_2019.svg.png" width="160" height="40"> |
 
----
+## ⭐️ Show Your Support
+Give a ⭐️ if you like this project!
+
 ## 🔗 Connect with Me
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://portfoliosumama.vercel.app/)
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sumama-khan)
 [![Leetcode](https://img.shields.io/badge/Leetocode-1DA1F2?style=for-the-badge&logo=Leetcode&logoColor=yellow)](https://leetcode.com/u/sumamakhan))
 ---
-## ⭐️ Show Your Support
-Give a ⭐️ if you like this project!
