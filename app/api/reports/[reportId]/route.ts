@@ -28,5 +28,10 @@ export async function PATCH(
       { error: "Error updating report" },
       { status: 500 }
     );
+  } finally {
+    // Disconnect Prisma in serverless environments
+    if (process.env.VERCEL) {
+      await prisma.$disconnect();
+    }
   }
 }

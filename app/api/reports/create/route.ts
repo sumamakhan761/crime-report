@@ -49,5 +49,10 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  } finally {
+    // Disconnect Prisma in serverless environments
+    if (process.env.VERCEL) {
+      await prisma.$disconnect();
+    }
   }
 }

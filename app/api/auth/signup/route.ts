@@ -57,5 +57,10 @@ export async function POST(request: Request) {
       { error: "Error creating user" },
       { status: 500 }
     );
+  } finally {
+    // Disconnect Prisma in serverless environments
+    if (process.env.VERCEL) {
+      await prisma.$disconnect();
+    }
   }
 }
