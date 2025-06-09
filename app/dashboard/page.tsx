@@ -1,9 +1,10 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Report, ReportStatus, ReportType } from "@prisma/client";
+import Image from "next/image";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -12,21 +13,8 @@ export default function Dashboard() {
   const [filter, setFilter] = useState<ReportStatus | "ALL">("ALL");
   const [typeFilter, setTypeFilter] = useState<ReportType | "ALL">("ALL");
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    // Redirect to home if user is not authorized
-    if (status === "authenticated" && session?.user?.email !== "sumamakhan800@gmail.com") {
-      router.push("/");
-    }
-  }, [session, status, router]);
 
-  useEffect(() => {
-    if (session?.user?.email === "sumamakhan800@gmail.com") {
-      fetchReports();
-    }
-  }, [session]);
-
-
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch("/api/reports");
@@ -37,7 +25,20 @@ export default function Dashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // Redirect to home if user is not authorized
+    if (status === "authenticated" && session?.user?.email !== "sumamakhan800@gmail.com") {
+      router.push("/");
+    } else if (status === "authenticated" && session?.user?.email === "sumamakhan800@gmail.com") {
+      fetchReports();
+    } else if (status === "unauthenticated") {
+      router.push("/auth/signin");
+    }
+
+    setIsLoading(false);
+  }, [session, status, router, fetchReports]);
 
   if (status === "loading" || isLoading) {
     return (
@@ -204,9 +205,11 @@ export default function Dashboard() {
                     </span>
                   </div>
                   {report.image && (
-                    <img
+                    <Image
                       src={report.image}
                       alt="Report"
+                      width={100}
+                      height={100}
                       className="mt-4 rounded-lg border border-neutral-800"
                     />
                   )}

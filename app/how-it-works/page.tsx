@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function HowItWorks() {
   return (
     <div className="relative min-h-screen bg-black selection:bg-sky-500/20 overflow-hidden">

@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { LocationInput } from "./LocationInput";
 import crypto from "crypto";
+import Image from "next/image";
 
 const REPORT_TYPES = [
   "Theft",
@@ -135,11 +136,10 @@ export function ReportForm({ onComplete }: ReportFormProps) {
           onClick={() =>
             setFormData((prev) => ({ ...prev, incidentType: "EMERGENCY" }))
           }
-          className={`p-6 rounded-2xl border-2 transition-all duration-200 ${
-            formData.incidentType === "EMERGENCY"
+          className={`p-6 rounded-2xl border-2 transition-all duration-200 ${formData.incidentType === "EMERGENCY"
               ? "bg-red-500/20 border-red-500 shadow-lg shadow-red-500/20"
               : "bg-zinc-900/50 border-zinc-800 hover:bg-red-500/10 hover:border-red-500/50"
-          }`}
+            }`}
         >
           <div className="flex flex-col items-center space-y-2">
             <svg
@@ -167,11 +167,10 @@ export function ReportForm({ onComplete }: ReportFormProps) {
           onClick={() =>
             setFormData((prev) => ({ ...prev, incidentType: "NON_EMERGENCY" }))
           }
-          className={`p-6 rounded-2xl border-2 transition-all duration-200 ${
-            formData.incidentType === "NON_EMERGENCY"
+          className={`p-6 rounded-2xl border-2 transition-all duration-200 ${formData.incidentType === "NON_EMERGENCY"
               ? "bg-orange-500/20 border-orange-500 shadow-lg shadow-orange-500/20"
               : "bg-zinc-900/50 border-zinc-800 hover:bg-orange-500/10 hover:border-orange-500/50"
-          }`}
+            }`}
         >
           <div className="flex flex-col items-center space-y-2">
             <svg
@@ -211,9 +210,11 @@ export function ReportForm({ onComplete }: ReportFormProps) {
           {image ? (
             <div className="space-y-4">
               <div className="w-full h-48 relative rounded-lg overflow-hidden">
-                <img
+                <Image
                   src={image}
                   alt="Preview"
+                  width={500}
+                  height={300}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -272,7 +273,7 @@ export function ReportForm({ onComplete }: ReportFormProps) {
       </div>
 
       {/* Specific Report Type */}
-        <div>
+      <div>
         <label className="block text-sm font-medium text-zinc-400 mb-2">
           Incident Type
         </label>
@@ -287,7 +288,7 @@ export function ReportForm({ onComplete }: ReportFormProps) {
                       appearance-none shadow-lg backdrop-blur-md"
             required
           >
-          <option value="">Select type</option>
+            <option value="">Select type</option>
             {REPORT_TYPES.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -300,7 +301,7 @@ export function ReportForm({ onComplete }: ReportFormProps) {
             ▼
           </span>
         </div>
-    </div>
+      </div>
 
 
       {/* Location */}

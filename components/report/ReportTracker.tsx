@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Search, Loader } from "lucide-react";
 
 interface ReportDetails {
@@ -16,36 +15,36 @@ interface ReportDetails {
 
 export function ReportTracker() {
   const [reportId, setReportId] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [reportDetails, setReportDetails] = useState<ReportDetails | null>(
-    null
-  );
-  const router = useRouter();
+  const [report, setReport] = useState<ReportDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setReportDetails(null);
-    setLoading(true);
+    setIsLoading(true);
+    setError(null);
+    setReport(null);
 
     if (!reportId.trim()) {
       setError("Please enter a report ID");
-      setLoading(false);
+      setIsLoading(false);
       return;
     }
 
     try {
       const response = await fetch(`/api/reports/${reportId}/details`);
+
       if (!response.ok) {
-        throw new Error("Report not found");
+        throw new Error("Report not found or invalid ID");
       }
+
       const data = await response.json();
-      setReportDetails(data);
-    } catch (err) {
-      setError("Unable to find report. Please check the ID and try again.");
+      setReport(data);
+    } catch (error) {
+      console.error("Error fetching report:", error);
+      setError("We couldn't find a report with that ID. Please check and try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -72,17 +71,16 @@ export function ReportTracker() {
       <div className="flex justify-center">
         <div
           className={`transition-all duration-300 ease-in-out 
-          ${
-            reportDetails
+          ${report
               ? "w-full grid md:grid-cols-2 gap-8"
               : "max-w-lg w-full"
-          }`}
+            }`}
         >
           {/* Form Section */}
           <div
             className={`bg-zinc-900/50 backdrop-blur-xl rounded-2xl border 
             border-white/5 p-6 w-full transition-all duration-300
-            ${reportDetails ? "" : "mx-auto"}`}
+            ${report ? "" : "mx-auto"}`}
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="relative">
@@ -101,7 +99,7 @@ export function ReportTracker() {
                            text-white placeholder-zinc-500 focus:outline-none focus:ring-2 
                            focus:ring-sky-500/50 focus:border-transparent transition-all"
                   placeholder="Enter your report ID"
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -126,19 +124,19 @@ export function ReportTracker() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-sky-500 to-blue-600 
                          text-white py-3 px-4 rounded-xl hover:from-sky-400 
                          hover:to-blue-500 transition-all duration-200 
                          disabled:opacity-50 disabled:cursor-not-allowed
                          flex items-center justify-center space-x-2"
               >
-                {loading ? (
+                {isLoading ? (
                   <Loader className="w-5 h-5 animate-spin" />
                 ) : (
                   <Search className="w-5 h-5" />
                 )}
-                <span>{loading ? "Searching..." : "Track Report"}</span>
+                <span>{isLoading ? "Searching..." : "Track Report"}</span>
               </button>
             </form>
           </div>
@@ -146,13 +144,12 @@ export function ReportTracker() {
           {/* Results Section */}
           <div
             className={`transition-all duration-300 
-            ${
-              reportDetails
+            ${report
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 translate-x-8 absolute"
-            }`}
+              }`}
           >
-            {reportDetails && (
+            {report && (
               <div className="rounded-xl border border-white/5 bg-black/30 backdrop-blur-xl p-6 h-full">
                 <h2 className="text-xl font-semibold text-white flex items-center gap-2 mb-6">
                   <div className="h-2 w-2 rounded-full bg-sky-400" />
@@ -164,25 +161,25 @@ export function ReportTracker() {
                     <span className="text-zinc-400">Status</span>
                     <span
                       className={`font-medium ${getStatusColor(
-                        reportDetails.status
+                        report.status
                       )} 
                         px-3 py-1 rounded-full bg-white/5`}
                     >
-                      {reportDetails.status.toUpperCase()}
+                      {report.status.toUpperCase()}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center p-3 rounded-lg bg-white/5">
                     <span className="text-zinc-400">Report ID</span>
                     <span className="text-white font-mono">
-                      {reportDetails.reportId || reportDetails.id}
+                      {report.reportId || report.id}
                     </span>
                   </div>
 
                   <div className="flex justify-between items-center p-3 rounded-lg bg-white/5">
                     <span className="text-zinc-400">Submitted On</span>
                     <span className="text-white">
-                      {new Date(reportDetails.createdAt).toLocaleDateString(
+                      {new Date(report.createdAt).toLocaleDateString(
                         undefined,
                         {
                           year: "numeric",
@@ -196,21 +193,21 @@ export function ReportTracker() {
                   <div className="p-3 rounded-lg bg-white/5 space-y-1.5">
                     <span className="text-zinc-400 text-sm">Title</span>
                     <span className="text-white block font-medium">
-                      {reportDetails.title}
+                      {report.title}
                     </span>
                   </div>
 
                   <div className="p-3 rounded-lg bg-white/5 space-y-1.5">
                     <span className="text-zinc-400 text-sm">Location</span>
                     <span className="text-white block font-medium">
-                      {reportDetails.location}
+                      {report.location}
                     </span>
                   </div>
 
                   <div className="p-3 rounded-lg bg-white/5 space-y-1.5">
                     <span className="text-zinc-400 text-sm">Description</span>
                     <p className="text-white text-sm leading-relaxed">
-                      {reportDetails.description}
+                      {report.description}
                     </p>
                   </div>
                 </div>

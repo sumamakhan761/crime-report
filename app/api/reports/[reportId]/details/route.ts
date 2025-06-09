@@ -9,10 +9,10 @@ export async function GET(
   { params }: { params: { reportId: string } }
 ) {
   try {
+    const { reportId } = params;
+
     const report = await prisma.report.findUnique({
-      where: {
-        reportId: params.reportId,
-      },
+      where: { reportId },
     });
 
     if (!report) {
@@ -39,14 +39,17 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = params;
     const { status } = await request.json();
+
     const report = await prisma.report.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     });
 
     return NextResponse.json(report);
   } catch (error) {
+    console.error("Error updating report:", error);
     return NextResponse.json(
       { error: "Error updating report" },
       { status: 500 }

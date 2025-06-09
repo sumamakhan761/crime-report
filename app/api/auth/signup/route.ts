@@ -40,11 +40,19 @@ export async function POST(request: Request) {
     });
 
     // Remove password from response
-    const { password: _, ...userWithoutPassword } = user;
+    const userWithoutPassword = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    };
 
     return NextResponse.json(userWithoutPassword, { status: 201 });
-  } catch (error: any) {
-    console.error("Signup error:", error);
-    return NextResponse.json({ error: "Error creating user" }, { status: 500 });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return NextResponse.json(
+      { error: "Error creating user" },
+      { status: 500 }
+    );
   }
 }
