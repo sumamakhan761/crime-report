@@ -1,4 +1,12 @@
-import { ReportWizard } from "@/components/report/ReportWizard";
+"use client";
+
+import dynamic from 'next/dynamic';
+
+// Dynamically import the ReportWizard component with no SSR
+const ReportWizard = dynamic(
+  () => import('@/components/report/ReportWizard').then(mod => ({ default: mod.ReportWizard })),
+  { ssr: false }
+);
 
 export default function SubmitReport() {
   return (
@@ -39,7 +47,7 @@ export default function SubmitReport() {
             </p>
           </div>
 
-          <div className="mt-16 bg-zinc-900/50 rounded-2xl border border-white/5  sm:p-6">
+          <div className="mt-16 bg-zinc-900/50 rounded-2xl border border-white/5 sm:p-6">
             <ReportWizard />
           </div>
         </div>

@@ -5,6 +5,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [

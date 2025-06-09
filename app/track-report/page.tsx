@@ -1,5 +1,11 @@
 "use client";
-import { ReportTracker } from "@/components/report/ReportTracker";
+import dynamic from 'next/dynamic';
+
+// Dynamically import the ReportTracker component with no SSR
+const ReportTracker = dynamic(
+  () => import('@/components/report/ReportTracker').then(mod => ({ default: mod.ReportTracker })),
+  { ssr: false }
+);
 
 export default function TrackReportPage() {
   return (
