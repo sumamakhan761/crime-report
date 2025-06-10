@@ -17,7 +17,7 @@ export default function SubmitReport() {
         <div className="absolute inset-0 h-full bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.04),transparent_70%)]" />
       </div>
 
-      <main className="relative pt-32 px-2">
+      <main className="relative pt-32 px-2 mb-5">
         <div className="mx-auto max-w-3xl">
           <div className="flex flex-col items-center text-center">
             <div className="inline-flex h-9 items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 text-sm text-sky-400">
