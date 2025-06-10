@@ -29,9 +29,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Redirect to home if user is not authorized
-    if (status === "authenticated" && session?.user?.email !== "sumamakhan800@gmail.com") {
+    if (status === "authenticated" && !session?.user?.role) {
       router.push("/");
-    } else if (status === "authenticated" && session?.user?.email === "sumamakhan800@gmail.com") {
+    } else if (status === "authenticated" && (session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR")) {
       fetchReports();
     } else if (status === "unauthenticated") {
       router.push("/auth/signin");
