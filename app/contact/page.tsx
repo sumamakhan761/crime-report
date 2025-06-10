@@ -289,10 +289,10 @@ export default function ContactPage() {
                       <h3 className="text-sm font-medium text-white">Email</h3>
                       <p className="mt-1 text-sm text-zinc-400">
                         <a
-                          href="mailto:sumamakhan800@gmail.com"
+                          href="mailto:report@gmail.com"
                           className="text-sky-400 hover:text-sky-300 transition-colors"
                         >
-                          sumamakhan800@gmail.com
+                          report@gmail.com
                         </a>
                       </p>
                       <p className="mt-1 text-xs text-zinc-500">
@@ -436,7 +436,7 @@ export default function ContactPage() {
                 },
                 {
                   question: "How can I provide feedback about the platform?",
-                  answer: "We welcome all feedback! You can use this contact form and select 'Feedback' as the subject, or email us directly at sumamakhan800@gmail.com.",
+                  answer: "We welcome all feedback! You can use this contact form and select 'Feedback' as the subject, or email us directly at report@gmail.com.",
                 },
               ].map((faq, i) => (
                 <div
