@@ -50,10 +50,7 @@ export async function POST(request: Request) {
 
     // Expect a data URL: data:<mime>;base64,<data>
     const commaIdx = image.indexOf(",");
-    const header = commaIdx >= 0 ? image.slice(0, commaIdx) : "";
     const base64Data = commaIdx >= 0 ? image.slice(commaIdx + 1) : "";
-    const mimeType =
-      header.match(/^data:(.*?);base64$/i)?.[1] ?? "image/jpeg";
 
     if (!base64Data) {
       return NextResponse.json(
