@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getMockResponse } from './mock-data';
-
-// Initialize the Google Generative AI with your API key
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import { getOpenRouterClient } from '@/lib/openrouter';
 
 // Flag to use mock data (true in development or when API key is missing)
-const useMockData = process.env.NODE_ENV === 'development' || !process.env.GEMINI_API_KEY;
+const useMockData =
+  process.env.NODE_ENV === 'development' || !process.env.OPENROUTER_API_KEY;
 
 // Define the system prompt to guide the model's behavior
 const SYSTEM_PROMPT = `You are a helpful assistant for a crime and disaster reporting website. 
@@ -47,33 +45,63 @@ export async function POST(request: Request) {
       return NextResponse.json({ response: mockResponse });
     }
 
-    // Convert history to the format expected by Gemini
-    const formattedHistory = history
-      .filter((msg: any) => msg.role !== 'system')
-      .map((msg: any) => ({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: msg.content }],
-      }));
+    const client = getOpenRouterClient();
+    if (!client) {
+      return NextResponse.json(
+        { error: 'OPENROUTER_API_KEY is not configured on the server' },
+        { status: 503 }
+      );
+    }
 
-    // Create a chat instance
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
-    const chat = model.startChat({
-      history: formattedHistory,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1000,
-      },
-      systemInstruction: SYSTEM_PROMPT,
+    // Default to a FREE text model on OpenRouter (no purchased credits required).
+    // You can override via OPENROUTER_CHAT_MODEL in .env.
+    const model =
+      process.env.OPENROUTER_CHAT_MODEL ||
+      'deepseek/deepseek-r1-distill-llama-70b:free';
+
+    // Convert history to OpenAI/OpenRouter chat format
+    const formattedHistory = Array.isArray(history)
+      ? history
+          .filter((msg: any) => msg?.role && msg?.content && msg.role !== 'system')
+          .map((msg: any) => ({
+            role: msg.role === 'assistant' ? ('assistant' as const) : ('user' as const),
+            content: String(msg.content),
+          }))
+      : [];
+
+    const completion = await client.chat.completions.create({
+      model,
+      temperature: 0.7,
+      max_tokens: 800,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...formattedHistory,
+        { role: 'user', content: String(message) },
+      ],
     });
 
-    // Generate the response
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const text = response.text();
+    const text = completion.choices?.[0]?.message?.content ?? '';
 
     return NextResponse.json({ response: text });
   } catch (error) {
     console.error('Error processing chatbot request:', error);
+
+    const status = (error as any)?.status ?? (error as any)?.statusCode;
+    if (status === 401 || status === 403) {
+      return NextResponse.json(
+        { error: 'OpenRouter authorization failed. Verify OPENROUTER_API_KEY.' },
+        { status: 401 }
+      );
+    }
+    if (status === 402) {
+      return NextResponse.json(
+        {
+          error:
+            'OpenRouter insufficient credits. Add credits at https://openrouter.ai/settings/credits',
+        },
+        { status: 402 }
+      );
+    }
 
     // Fallback to mock data if API request fails
     if (!useMockData) {
